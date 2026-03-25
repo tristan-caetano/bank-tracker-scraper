@@ -46,6 +46,8 @@ def cit_login():
     # Clicking the Sign In Button
     # Finds the button specifically by its aria-label
     driver.find_element(By.CSS_SELECTOR, "button[aria-label='Sign in']").click()
+
+    print("Logging in...")
     
     # Waiting before checking if we are in or OTP
     time.sleep(10)
@@ -56,8 +58,12 @@ def cit_login():
     # If it asks us for an OTP code
     if "OtpChoice" in curr_url:
 
+        print("Multi Factor Authentication Required")
+
         # Clicking the Send SMS Button
         driver.find_element(By.XPATH, "//label[contains(text(), 'Send SMS')]").click()
+
+        print("SMS Sent, Waiting for MFA Code...")
 
         # Waiting to get OPT code
         while not_have_otp:
@@ -68,6 +74,7 @@ def cit_login():
 
             # Waiting for the token file to be created and grabbing it
             if file_path.is_file():
+                print("MFA Code Recieved!")
                 not_have_otp = False
                 try:
                     with open(mfa_filename, 'r') as f:
@@ -86,29 +93,34 @@ def cit_login():
         driver.find_element(
             "xpath", '/html/body/app-root/app-page-validateotpandpassword/div/main/div/div/div[2]/div/div/div/div[1]/div/div[2]/div/div/div[3]/div/form/div/div[2]/button').click()
 
-        # Waiting to load into the account
-        time.sleep(15)
+    # Waiting to load into the account
+    time.sleep(15)
 
-        # Clicking into the Platinum Savings
-        driver.find_element(By.XPATH, "//label[contains(text(), 'Platinum Savings')]").click()
+    print("Login Successful!")
 
-        # Waiting to load into the savings account
-        time.sleep(10)
+    # Clicking into the Platinum Savings
+    driver.find_element(By.XPATH, "//label[contains(text(), 'Platinum Savings')]").click()
 
-        # Clicking the Download Button
-        driver.find_element(By.CSS_SELECTOR, "button[aria-label='Download Transactions']").click()
+    print("Accessing Account Information...")
 
-        # Waiting for the download screen to appear
-        time.sleep(2)
+    # Waiting to load into the savings account
+    time.sleep(10)
 
-        # Clicking into the Export Button
-        driver.find_element(By.CSS_SELECTOR, "button[aria-label='Export']").click()
+    print("Downloading CSV File...")
 
-        # Waiting for download to finish
-        time.sleep(5)
+    # Clicking the Download Button
+    driver.find_element(By.CSS_SELECTOR, "button[aria-label='Download Transactions']").click()
+
+    # Waiting for the download screen to appear
+    time.sleep(2)
+
+    # Clicking into the Export Button
+    driver.find_element(By.CSS_SELECTOR, "button[aria-label='Export']").click()
+
+    print("CSV File Successfully Downloaded, Goodbye!")
+
+    # Waiting for download to finish
+    time.sleep(5)
 
     # Closing window
     driver.close()
-   
-cit_login()
-
